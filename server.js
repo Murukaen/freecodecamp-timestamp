@@ -2,7 +2,7 @@
 
 var express = require('express')
 var app = express()
-const port = 8080
+const port = process.env.PORT || 8080
 
 function analyzeDate(date) {
   return {unix: Date.parse(date), natural: date}
