@@ -4,8 +4,26 @@ var express = require('express')
 var app = express()
 const port = process.env.PORT || 8080
 
-function analyzeDate(date) {
-  return {unix: Date.parse(date), natural: date}
+function unixToDate(unix) {
+  return new Date(+unix).toDateString();
+}
+
+function parseDate(date) {
+  let unix = Date.parse(date)
+  return parseUnixTime(unix)
+}
+
+function parseUnixTime(unix) {
+  return {unix: unix, natural: unixToDate(unix)}
+}
+
+function isInt(s) {
+    let n = parseInt(s, 10);
+    return n.toString() === s;
+}
+
+function buildBadRequest() {
+  return {'error' : 'illegal parameter'}
 }
 
 app.get('/', function (req, res) {
@@ -14,7 +32,12 @@ app.get('/', function (req, res) {
 
 app.get('/:data', (req, res) => {
   let data = req.params.data
-  res.send(analyzeDate(data))
+  if (!isNaN(Date.parse(data)))
+    res.send(parseDate(data))
+  else if (isInt(data))
+    res.send(parseUnixTime(data))
+  else
+    res.send(buildBadRequest())
 })
 
 app.listen(port, function () {
