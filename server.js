@@ -1,7 +1,8 @@
 "use strict";
 
-var express = require('express')
-var app = express()
+const express = require('express')
+const path = require('path')
+const app = express()
 const port = process.env.PORT || 8080
 
 function unixToDate(unix) {
@@ -26,9 +27,9 @@ function buildBadRequest() {
   return {'error' : 'illegal parameter'}
 }
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+app.get('/',function(req,res){
+  res.sendFile(path.join(__dirname+'/index.html'));
+});
 
 app.get('/:data', (req, res) => {
   let data = req.params.data
